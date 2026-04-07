@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMST Light | 마음 건강 테스트</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <style>
+    :root { 
+        /* 로고의 딥블루 컬러를 메인으로 반영 */
+        --primary: #002D62; 
+        --bg: #f0f4f3; 
+        --white: #ffffff; 
+        --text: #111; 
+        --accent: #f8fafd; /* 버튼 기본 배경색 */
+        --border: #e0e6ed;
+    }
+
+    body { 
+        font-family: 'Pretendard', sans-serif; 
+        background-color: var(--bg); 
+        color: var(--text); 
+        margin: 0; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        min-height: 100vh; 
+        word-break: keep-all; /* 한글 단어 단위 줄바꿈 최적화 */
+    }
+    
+    /* 1. 컨테이너: 가로폭 확장 및 시각적 개방감 부여 */
+    .container { 
+        background: var(--white); 
+        width: 95%; 
+        max-width: 650px; /* 500px에서 650px로 대폭 확장 */
+        padding: 60px 50px; 
+        border-radius: 40px; 
+        box-shadow: 0 30px 60px rgba(0,0,0,0.06); 
+        text-align: center; 
+        box-sizing: border-box;
+    }
+    
+    /* 2. 로고 영역: 존재감 확보 */
+    .logo-box { 
+        width: 100%; 
+        text-align: center; 
+        margin-bottom: 50px; 
+    }
+    .logo-box img { 
+        width: 85%; 
+        max-width: 380px; 
+        height: auto; 
+        object-fit: contain; 
+    }
+
+    /* 3. 진행바: 더 부드러운 애니메이션 */
+    .progress-container { 
+        width: 100%; 
+        height: 10px; 
+        background: #eee; 
+        border-radius: 20px; 
+        margin-bottom: 45px; 
+        overflow: hidden; 
+    }
+    #progress-bar { 
+        width: 0%; 
+        height: 100%; 
+        background: var(--primary); 
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    }
+
+    /* 4. 질문 영역: 글자 크기와 행간 대폭 강화 */
+    .page-content { display: none; animation: fadeIn 0.5s ease; } 
+    #start-page { display: block; }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .question-box h2 { 
+        font-size: 1.7rem; /* 시원시원한 크기 */
+        font-weight: 700;
+        line-height: 1.6; 
+        margin-bottom: 55px; 
+        min-height: 110px; 
+        color: var(--text); 
+    }
+
+    /* 5. 답변 버튼: 터치 영역 확대 및 호버 효과 극대화 */
+    .options { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 16px; 
+    }
+    .option-btn { 
+        background: var(--accent); 
+        border: 2px solid var(--border); 
+        padding: 24px; /* 버튼 높이 확장 */
+        border-radius: 22px; 
+        cursor: pointer; 
+        font-size: 1.2rem; /* 버튼 글자 크기 업그eline */
+        transition: all 0.2s ease; 
+        font-weight: 600;
+        color: #333;
+        outline: none;
+    }
+
+    .option-btn:hover { 
+        border-color: var(--primary); 
+        background: #fff; 
+        color: var(--primary);
+        box-shadow: 0 10px 25px rgba(0,45,98,0.1);
+        transform: translateY(-3px); 
+    }
+
+    .option-btn:active { 
+        transform: translateY(-1px); 
+        background: #f1f1f1;
+    }
+
+    /* 6. 결과 영역: 분석 리포트 느낌의 디자인 */
+    .result-title { 
+        font-size: 1.3rem; 
+        color: #666; 
+        margin-bottom: 20px; 
+        font-weight: 500;
+    }
+    .character-name { 
+        font-size: 2.6rem; 
+        font-weight: 800; 
+        margin-bottom: 35px; 
+        color: var(--primary); 
+        line-height: 1.3;
+    }
+    .result-desc { 
+    background: #f9fbfc; 
+    padding: 35px; 
+    border-radius: 25px; 
+    font-size: 1.15rem; 
+    line-height: 1.8; 
+    color: #444; 
+    text-align: center; /* [중요] 모든 본문 텍스트 가운데 정렬 */
+    border: 1px solid #eff2f5;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+}
+    .emphasis { 
+    color: var(--primary); 
+    font-weight: 700; 
+    display: inline-block;
+    background: #eef2f7;
+    padding: 2px 12px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    margin-bottom: 10px !important;
+}
+
+/* 상세 설명 텍스트 모바일 대응 */
+.result-desc p {
+    margin: 0;
+    word-break: keep-all;
+    max-width: 100%; /* 텍스트가 박스를 넘지 않도록 안전장치 */
+}
+
+    /* 메인 시작 버튼 전용 스타일 */
+    .start-btn {
+        background: var(--primary) !important;
+        color: white !important;
+        border: none !important;
+        font-size: 1.3rem !important;
+        padding: 26px !important;
+        box-shadow: 0 10px 30px rgba(0,45,98,0.2);
+    }
+
+    /* 궁합 지도 스타일 */
+.map-container { margin-top: 50px; padding-top: 30px; border-top: 1px solid #eee; }
+.chemistry-table { 
+    margin: 20px auto; 
+    border-collapse: separate; 
+    border-spacing: 4px; 
+    font-size: 0.8rem; 
+    table-layout: fixed;
+    width: 100%;
+    max-width: 450px;
+}
+.chemistry-table th, .chemistry-table td { 
+    width: 35px; height: 35px; 
+    text-align: center; vertical-align: middle; 
+    border-radius: 6px; 
+}
+.chemistry-table th { background: #f1f3f5; font-weight: 700; color: #666; }
+.legend { display: flex; justify-content: center; gap: 15px; margin-top: 15px; font-size: 0.8rem; color: #888; }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.dot { width: 10px; height: 10px; border-radius: 2px; }
+
+/* 원형 휠 레이아웃 추가 */
+    .wheel-wrapper {
+    position: relative;
+    width: 300px; 
+    height: 300px;
+    margin: 40px auto;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* [수정] 배경색을 가장 낮은 점수의 빨간색으로 설정하여 미세한 틈새를 메워줍니다 */
+    background: #E74C3C; 
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    border: none;
+    overflow: hidden; /* 조각들이 원 밖으로 나가지 않게 깔끔하게 커팅 */
+}
+   /* 중앙 원형: 조각들이 침범해도 위에서 덮어버림 (Z-index 활용) */
+.wheel-center {
+    position: absolute;
+    width: 110px; /* 크기를 살짝 키워 가독성 확보 */
+    height: 110px;
+    background: var(--white);
+    border-radius: 50%;
+    z-index: 10; /* 조각들보다 무조건 위로! */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: 3px solid var(--primary);
+}
+    .wheel-center .title { font-size: 0.6rem; color: #888; }
+    .wheel-center .name { font-size: 0.9rem; font-weight: 800; color: var(--primary); }
+
+    /* 조각들이 담기는 컨테이너: 완벽한 원형 유지 */
+.wheel-pieces {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.piece {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    left: 50%;
+    top: 0;
+    transform-origin: 0% 100%;
+    /* 64등분 각도인 5.625도만큼만 정확히 자르기 */
+    clip-path: polygon(0 100%, 10% 0, 0 0); 
+    border-left: 1px solid rgba(255, 255, 255, 0.1); /* 64개 빗금 구획선 */
+    cursor: pointer;
+}
+
+.piece:hover {
+    filter: brightness(1.2); /* 마우스 올리면 해당 괘가 밝아짐 */
+    z-index: 20;
+}
+    .result-desc p {
+    margin: 0;
+    word-break: keep-all;
+}
+.emphasis {
+    display: inline-block;
+    background: #eef2f7;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 8px !important;
+}
+
+/* 모바일 대응: 닉네임이 길어도 안전하게 */
+#res-nickname-large {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+
+/* MBTI 배지 가독성 향상 */
+#res-mbti {
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(230, 126, 34, 0.2);
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="logo-box">
+        <img src="Omst_Logo_final.svg" alt="OMST Logo | Oriental Mind Scan Test">
+    </div>
+
+    <div id="start-page" class="page-content">
+        <p style="color: #666; margin-bottom: 50px; font-size: 1.2rem; word-break: keep-all;">
+            8괘의 고대 지혜와 현대 심리학을 결합한 기질 분석 테스트
+        </p>
+        <button class="option-btn" style="width: 100%; background: var(--primary); color: #fff; border: none; font-size: 1.2rem;" onclick="showTest()">테스트 시작하기</button>
+    </div>
+
+    <div id="test-page" class="page-content">
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+        <div class="question-box">
+            <h2 id="question-text">질문을 불러오는 중...</h2>
+            <div class="options">
+                <button class="option-btn" onclick="nextQuestion(5)">매우 그렇다</button>
+                <button class="option-btn" onclick="nextQuestion(4)">그렇다</button>
+                <button class="option-btn" onclick="nextQuestion(3)">보통이다</button>
+                <button class="option-btn" onclick="nextQuestion(2)">아니다</button>
+                <button class="option-btn" onclick="nextQuestion(1)">전혀 아니다</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result-page" class="page-content">
+    <div class="character-name" style="margin-top: 20px;">
+        <div id="res-gua-info" style="font-size: 1.4rem; color: #888; font-weight: 500; margin-bottom: 8px; letter-spacing: 1px;">
+            분석 중...
+        </div>
+        <div id="res-nickname-large" style="font-size: 3.2rem; font-weight: 900; color: var(--primary); line-height: 1.2; margin-bottom: 15px;">
+            기질 로딩...
+        </div>
+        <div id="res-mbti-container" style="margin-bottom: 25px;">
+            <span id="res-mbti" style="background: #E67E22; color: #fff; padding: 4px 12px; border-radius: 50px; font-size: 0.9rem; font-weight: 700; letter-spacing: 1px;">
+                MBTI 분석 중
+            </span>
+        </div>
+    </div>
+
+    <div id="res-tags" style="margin-bottom: 25px; color: var(--primary); font-weight: 600; font-size: 0.95rem;"></div>
+
+    <div class="result-desc">
+    <div style="margin-bottom: 30px;">
+        <p class="emphasis">🌍 세상에 보여지는 나의 모습</p>
+        <p id="res-social" style="margin-top: 5px;"></p>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+        <p class="emphasis">🧘 혼자 있을 때의 진짜 내 모습</p>
+        <p id="res-inner" style="margin-top: 5px;"></p>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+        <p class="emphasis">💘 연애와 인간관계의 온도</p>
+        <p id="res-romance" style="margin-top: 5px;"></p>
+    </div>
+
+    <div style="padding-top: 20px; border-top: 1px dashed #ccc;">
+        <p class="emphasis">🎒 마음 처방전</p>
+        <p id="res-advice" style="margin-top: 5px;"></p>
+    </div>
+
+    <div class="map-container" style="text-align: center; overflow: hidden;">
+    <h3 style="font-size: 1.3rem; margin-top: 30px;">🔮 OMST™ 64기질 에너지 서클</h3>
+    <p style="font-size: 0.9rem; color: #888; margin-bottom: 20px;">나를 중심으로 본 주변 기질과의 공명도</p>
+
+    <div class="wheel-wrapper">
+        <div class="wheel-center">
+            <span class="title">MY TYPE</span>
+            <span class="name" id="wheel-my-name">건위천</span>
+        </div>
+        <div class="wheel-pieces" id="wheel-pieces">
+            </div>
+    </div>
+    
+    <div id="wheel-info" style="font-size: 0.9rem; font-weight: 600; color: #555; min-height: 20px;">
+        원 위의 조각에 마우스를 올려보세요
+    </div>
+</div>
+
+    <button class="option-btn" style="width: 100%; margin-top: 35px; background: #555; color:#fff;" onclick="location.reload()">다시 하기</button>
+</div>
+
+<script src="light_db.js"></script>
+<script src="light_db2.js"></script>
+<script>
+    let currentIdx = 0;
+    let userAnswers = [];
+
+    // 1. 테스트 시작
+function showTest() {
+    // 질문지 로드 확인
+    if (typeof questions === 'undefined' || questions.length === 0) {
+        alert('질문지(light_db.js)를 찾을 수 없습니다. 파일 연결을 확인해주세요!');
+        return;
+    }
+    document.getElementById('start-page').style.display = 'none';
+    document.getElementById('test-page').style.display = 'block';
+    updateQuestion();
+}
+
+// 2. 질문 업데이트
+function updateQuestion() {
+    const q = questions[currentIdx];
+    const qText = document.getElementById('question-text');
+    const pBar = document.getElementById('progress-bar');
+    
+    if (qText) qText.innerText = `${currentIdx + 1}. ${q.text}`;
+    
+    // 진행바 (전체 32문항 기준)
+    if (pBar) {
+        const progress = (currentIdx / questions.length) * 100;
+        pBar.style.width = progress + "%";
+    }
+}
+
+// 3. 답변 클릭 (이 함수가 다음으로 넘기는 핵심!)
+function nextQuestion(score) {
+    userAnswers.push(score);
+    currentIdx++;
+
+    if (currentIdx < questions.length) {
+        updateQuestion(); // 다음 질문으로
+    } else {
+        // 모든 질문 완료 시 결과 화면으로
+        finishTest();
+    }
+}
+const newNicknames = {
+    // 1~8 (건, 곤, 수, 화, 뢰, 풍, 산, 택 계열 핵심)
+    "111111": "지치지 않는 태양의 리더",        // 01. 건위천
+    "000000": "만물을 품는 대지의 어머니",      // 02. 곤위지
+    "100010": "새로운 시작을 여는 개척자",      // 03. 수뢰둔
+    "010001": "순수한 호기심의 탐구자",        // 04. 산수몽
+    "111010": "때를 기다리는 지혜로운 전략가",   // 05. 수천수
+    "010111": "정의를 위해 나서는 중재자",      // 06. 천수송
+    "000010": "부드러운 카리스마의 지휘관",     // 07. 지수사
+    "010000": "마음을 잇는 따뜻한 조력자",      // 08. 수지비
+
+    // 9~16
+    "111011": "작은 행복을 가꾸는 예술가",      // 09. 풍천소축
+    "110111": "예의와 품격을 갖춘 실천가",      // 10. 천택리
+    "111000": "조화와 평화를 만드는 평화주의자",  // 11. 지천태
+    "000111": "고독을 즐기는 철학적 사색가",    // 12. 천지비
+    "111101": "함께 미래를 그리는 협력자",      // 13. 천화동인
+    "101111": "풍요로운 마음을 나누는 자산가",   // 14. 화천대유
+    "000100": "겸손함 속에 내공을 감춘 고수",    // 15. 지산겸
+    "001000": "즐거움을 전파하는 에너지 메이커",  // 16. 뇌지예
+
+    // 17~24
+    "110001": "흐름에 몸을 맡기는 유연한 자유인",  // 17. 택뢰수
+    "100011": "문제를 해결하는 깔끔한 정리술사",  // 18. 산풍고
+    "110000": "희망을 전하는 밝은 안내자",      // 19. 지택림
+    "000011": "통찰력을 지닌 고요한 관찰자",    // 20. 풍지관
+    "101001": "시시비비를 가리는 명쾌한 심판관",  // 21. 화뢰서합
+    "100101": "내면의 아름다움을 가꾸는 미학자",  // 22. 산화비
+    "000001": "내실을 다지는 인내의 수행자",    // 23. 산지박
+    "100000": "다시 일어서는 불굴의 재기론자",   // 24. 지뢰복
+
+    // 25~32
+    "111001": "순수함을 간직한 직관의 소유자",    // 25. 천뢰무망
+    "100111": "지식을 쌓아가는 현명한 학자",     // 26. 산천대축
+    "100001": "몸과 마음을 보살피는 힐러",      // 27. 산뢰이
+    "011110": "한계를 뛰어넘는 열정의 도전가",   // 28. 택풍대과
+    "010010": "깊은 바다 같은 감성 소유자",     // 29. 중수감
+    "101101": "빛을 발산하는 화려한 예술가",    // 30. 중화리
+    "011001": "마음이 통하는 다정한 공감자",    // 31. 택산함
+    "100110": "한결같은 믿음을 주는 동반자",    // 32. 뇌풍항
+
+    // 33~40
+    "001111": "한발 물러설 줄 아는 여유로운 현자", // 33. 천산둔
+    "111100": "거침없이 전진하는 파워 엔진",    // 34. 뇌천대장
+    "000101": "빛을 향해 나아가는 희망의 증거",   // 35. 화지진
+    "101000": "어둠 속에서도 길을 찾는 낙천가",   // 36. 지화명이
+    "110101": "가족을 아끼는 따뜻한 수호자",    // 37. 풍화가인
+    "101011": "다양성을 포용하는 열린 중재자",    // 38. 화택규
+    "010100": "역경을 헤쳐나가는 의지의 한국인",  // 39. 수산건
+    "001010": "갈등을 풀어주는 마법의 해결사",   // 40. 뇌수해
+
+    // 41~48
+    "110001": "덜어낼 줄 아는 절제의 미학자",    // 41. 산택손 (중복주의: 17번과 유사하면 체크)
+    "100011": "성장을 돕는 아낌없는 후원자",     // 42. 풍뢰익
+    "011111": "망설임 없는 단호한 결단가",      // 43. 택천쾌
+    "111110": "우연한 만남을 소중히 여기는 인연가", // 44. 천풍구
+    "011000": "사람을 불러모으는 매력적인 리더",  // 45. 택지췌
+    "000110": "끊임없이 성장하는 자기계발가",    // 46. 지풍승
+    "011010": "시련을 통해 단단해지는 보석",    // 47. 택수곤
+    "010110": "마르지 않는 영감의 샘물",       // 48. 수풍정
+
+    // 49~56
+    "011101": "세상을 바꾸는 혁신적 개혁가",    // 49. 택화혁
+    "101110": "전통과 안정을 중시하는 보수주의자", // 50. 화풍정
+    "100100": "세상을 깨우는 변화의 목소리",    // 51. 중뢰진
+    "001001": "중심을 지키는 흔들림 없는 바위",   // 52. 중산간
+    "001011": "차근차근 단계를 밟는 성실파",    // 53. 풍산점
+    "110100": "자유로운 영혼의 영원한 청춘",    // 54. 뇌택귀매
+    "101100": "풍요를 즐기는 당당한 주인공",    // 55. 뇌화풍
+    "001101": "여행을 떠나는 낭만적 방랑자",    // 56. 화산려
+
+    // 57~64
+    "011011": "스며들듯 다가오는 부드러운 바람",  // 57. 중풍손
+    "110110": "기쁨을 나누는 긍정주의자",      // 58. 중택태
+    "010011": "마음의 벽을 허무는 개방론자",    // 59. 풍수환
+    "110010": "원칙을 지키는 올바른 중재자",    // 60. 수택절
+    "110011": "믿음으로 움직이는 진실한 사람",   // 61. 풍택중부
+    "001100": "작은 일에 정성을 다하는 완벽주의자", // 62. 뇌산소과
+    "010101": "끝마무리가 확실한 유종의 미",    // 63. 수화기제
+    "101010": "끝없는 도전을 즐기는 꿈꾸는 자"   // 64. 화수미제
+};
+
+function applyNewNicknames() {
+    const db = window.ichingDB || ichingDB;
+    if (!db) return;
+
+    Object.keys(newNicknames).forEach(key => {
+        if (db[key]) {
+            db[key].nickname = newNicknames[key]; // 해당 키의 닉네임만 교체
+        }
+    });
+    console.log("✅ 닉네임 오버라이드 완료!");
+}
+
+window.onload = function() {
+    applyNewNicknames();
+};
+
+// 1. 테스트 종료 및 결과 출력 통합 함수
+function finishTest() {
+    console.log("테스트 종료, 결과 분석 시작...");
+    
+    // 1. 화면 전환
+    document.getElementById('test-page').style.display = 'none';
+    document.getElementById('result-page').style.display = 'block';
+
+    // 2. 데이터 계산 호출
+    const resultData = calculateAndDisplayResult(userAnswers); 
+    
+    if (!resultData || !resultData.fullKey) {
+        alert("결과 데이터를 생성하지 못했습니다.");
+        return;
+    }
+
+    // 3. DB 로드 확인
+    const db = window.ichingDB || ichingDB;
+    if (typeof db === 'undefined') {
+        alert("데이터베이스(light_db2.js)를 불러오지 못했습니다.");
+        return;
+    }
+
+    const data = db[resultData.fullKey];
+
+    if (data) {
+    // [A] 타이틀 및 MBTI 업데이트
+    const resGuaInfo = document.getElementById('res-gua-info');
+    const resNicknameLarge = document.getElementById('res-nickname-large');
+    const resMbti = document.getElementById('res-mbti');
+    const resTags = document.getElementById('res-tags');
+
+    // 1. 괘 정보
+    if (resGuaInfo) resGuaInfo.innerText = `${data.symbol || ''} ${data.name || ''}`;
+
+    // 2. 닉네임
+    if (resNicknameLarge) resNicknameLarge.innerText = data.nickname || '';
+
+    // 3. MBTI (주황색 포인트 컬러 적용)
+    if (resMbti) {
+        resMbti.innerText = `유사 MBTI : ${data.mbti || '분석불가'}`;
+    }
+
+    // 4. 태그 (#해시태그 느낌)
+    if (resTags) resTags.innerText = data.tag || '';
+
+    // [B] 본문 상세 내용 (기존 유지)
+    if (document.getElementById('res-social')) document.getElementById('res-social').innerText = data.social || '';
+    if (document.getElementById('res-inner')) document.getElementById('res-inner').innerText = data.inner || '';
+    if (document.getElementById('res-romance')) document.getElementById('res-romance').innerText = data.romance || '';
+    if (document.getElementById('res-advice')) document.getElementById('res-advice').innerText = data.advice || '';
+
+    // [C] 64괘 휠 렌더링
+    if (resultData.hexaName) {
+        const wheelMyName = document.getElementById('wheel-my-name');
+        if(wheelMyName) wheelMyName.innerText = resultData.hexaName;
+        render64Wheel(resultData.hexaName);
+    }
+} else {
+        alert("해당 괘의 데이터가 DB에 없습니다: " + resultData.fullKey);
+    }
+}
+
+function getGradientColor(score) {
+    // [1] 점수 보정 (보통 궁합이 40~100 사이에 몰려 있으므로, 시각적 차이를 극대화)
+    // 40점 이하는 0점으로, 100점은 100점으로 환산하여 0~100 범위를 꽉 채웁니다.
+    let visualScore = (score - 40) * (100 / 60); 
+    if (visualScore < 0) visualScore = 0;
+    if (visualScore > 100) visualScore = 100;
+
+    // [2] 원장님 요청 20점 단위 5색 매칭 (보정된 visualScore 기준)
+    if (visualScore >= 80) return '#3498DB'; // 파랑 (환상의 조화)
+    if (visualScore >= 60) return '#2ECC71'; // 초록 (안정적)
+    if (visualScore >= 40) return '#F1C40F'; // 노랑 (보통)
+    if (visualScore >= 20) return '#E67E22'; // 주황 (주의)
+    return '#E74C3C';                       // 빨강 (충돌)
+}
+
+function showWheelInfo(guaName, score) {
+    const infoBox = document.getElementById('wheel-info');
+    const db = window.ichingDB || ichingDB;
+    if (!db) return;
+
+    let targetGua = null, targetKey = null;
+    Object.keys(db).forEach(key => {
+        if (db[key].name.includes(guaName)) { targetGua = db[key]; targetKey = key; }
+    });
+    if (!targetGua) return;
+
+    const guaNickname = (typeof newNicknames !== 'undefined' && newNicknames[targetKey]) || targetGua.nickname;
+
+    // [중요] 휠의 색상 로직과 동일하게 보정 점수 계산
+    let vScore = (score - 40) * (100 / 60);
+    if (vScore < 0) vScore = 0;
+
+    let status, statusColor;
+    // 휠 색상 기준과 100% 일치시킴
+    if (vScore >= 80) { status = "✅ 최상의 조화 (파랑)"; statusColor = "#3498DB"; }
+    else if (vScore >= 60) { status = "🌿 안정적 관계 (초록)"; statusColor = "#2ECC71"; }
+    else if (vScore >= 40) { status = "⚖️ 평범한 관계 (노랑)"; statusColor = "#F1C40F"; }
+    else if (vScore >= 20) { status = "⚠️ 서먹한 관계 (주황)"; statusColor = "#E67E22"; }
+    else { status = "🚨 충돌 주의 (빨강)"; statusColor = "#E74C3C"; }
+
+    infoBox.innerHTML = `
+        <div style="background:#fff; padding:12px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.1); border-bottom:4px solid ${statusColor};">
+            <div style="font-size:1.1rem; color:var(--primary); font-weight:800; margin-bottom:4px;">
+                ${targetGua.symbol} ${guaName}
+            </div>
+            <div style="font-size:0.9rem; color:#555; margin-bottom:6px;">"${guaNickname}"</div>
+            <div style="font-size:0.95rem; font-weight:700; color:${statusColor};">
+                ${status}
+            </div>
+        </div>
+    `;
+}
+
+function render64Wheel(userHexaName) {
+    const container = document.getElementById('wheel-pieces');
+    if (!container) return;
+
+    const allHexas = getAllHexagrams(); 
+    const angleStep = 360 / 64;
+
+    let scoredList = allHexas.map(target => ({
+        name: target,
+        score: calculate64Score(userHexaName, target)
+    }));
+
+    // 점수 높은 순 정렬
+    scoredList.sort((a, b) => b.score - a.score);
+
+    let html = '';
+    scoredList.forEach((item, i) => {
+        const color = getGradientColor(item.score);
+        const rotation = i * angleStep;
+        
+        // [수정 포인트] 따옴표와 속성을 정확히 분리했습니다. 
+        // 0.1도 정도 겹치게 하여 흰 틈새 방지
+        html += `
+            <div class="piece" 
+                 style="transform: rotate(${rotation}deg); background: ${color};"
+                 onmouseover="showWheelInfo('${item.name}', ${item.score})">
+            </div>`;
+    });
+    
+    container.innerHTML = html;
+
+    const wheelName = document.getElementById('wheel-my-name');
+    if(wheelName) wheelName.innerText = userHexaName;
+
+    // 중앙 원에 마우스 올려도 내 정보 나오게 추가
+    const wheelCenter = document.querySelector('.wheel-center');
+    if(wheelCenter) {
+        wheelCenter.onmouseover = () => showWheelInfo(userHexaName, 100);
+    }
+}
+</script>
+
+</body>
+</html>
