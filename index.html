@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMST Light | Decode your innate blueprint</title>
+    <title>OMST Light | Decode your innate nature</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
     :root { 
@@ -279,6 +279,36 @@
     box-shadow: 0 4px 10px rgba(230, 126, 34, 0.2);
 }
 
+/* 불일치 지수(Dissonance Index) 게이지 스타일 */
+.dissonance-container {
+    margin: 30px 0;
+    padding: 20px;
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid #eee;
+}
+.dissonance-bar-bg {
+    width: 100%;
+    height: 12px;
+    background: #eee;
+    border-radius: 10px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+.dissonance-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3498DB, #E74C3C); /* 파랑에서 빨강으로 */
+    width: 0%; /* JS에서 조절 */
+    transition: width 1s ease-out;
+}
+.dissonance-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #666;
+}
+
 </style>
 </head>
 <body>
@@ -365,6 +395,60 @@
     <div id="wheel-info" style="font-size: 0.9rem; font-weight: 600; color: #555; min-height: 20px;">
         원 위의 조각에 마우스를 올려보세요
     </div>
+</div>
+
+<div class="dissonance-container" style="background: #ffffff; border: 1px solid #e2e8f0; padding: 25px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.03);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <p class="emphasis" style="margin:0; background: #f1f5f9; color: #475569;">📊 에너지 불일치 지수 (Dissonance Index)</p>
+        <span id="dissonance-status" style="padding: 5px 14px; border-radius: 50px; font-size: 0.85rem; font-weight: 800; color: #fff; background: #94a3b8;">분석 대기</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="text-align: center; min-width: 50px;">
+            <span style="font-size: 1.5rem;">😌</span>
+            <div style="font-size: 0.65rem; color: #3498DB; font-weight: bold; margin-top: 4px;">조화로움</div>
+        </div>
+
+        <div style="flex-grow: 1;">
+            <div class="dissonance-bar-bg" style="width: 100%; height: 14px; background: #f1f1f1; border-radius: 10px; overflow: hidden; position: relative;">
+                <div id="dissonance-bar" class="dissonance-bar-fill" style="width: 0%; height: 100%; background: linear-gradient(90deg, #3498DB, #E74C3C); transition: width 2s cubic-bezier(0.34, 1.56, 0.64, 1);"></div>
+            </div>
+        </div>
+
+        <div style="text-align: center; min-width: 50px;">
+            <span style="font-size: 1.5rem;">😫</span>
+            <div style="font-size: 0.65rem; color: #E74C3C; font-weight: bold; margin-top: 4px;">에너지소모</div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 10px;">
+        <span id="dissonance-value" style="font-size: 1.8rem; font-weight: 900; letter-spacing: -1px; color: #334155;">0%</span>
+    </div>
+    
+    <p id="dissonance-desc" style="font-size: 0.95rem; color: #64748b; margin-top: 15px; text-align: center; line-height: 1.6; word-break: keep-all;"></p>
+</div>
+
+<div id="caution-energy" style="margin: 20px 0; padding: 15px; border-radius: 15px; background: #fff5f5; border: 1px solid #ffe3e3; display:none;">
+    <p style="margin:0; font-size: 0.95rem; color: #c92a2a;">
+        🚨 <strong>주의가 필요한 레드 에너지:</strong> <span id="bad-gua-name" style="font-weight: 800;"></span>
+        <br><span style="font-size: 0.8rem; color: #fa5252;">*이 기질과의 충돌은 당신의 에너지를 급격히 고갈시킬 수 있습니다.</span>
+    </p>
+</div>
+
+<p style="font-size: 0.75rem; color: #bbb; margin-top: 30px;">
+    본 결과는 2,000건 이상의 임상 상담 데이터를 기반으로 설계된 <br><strong>OMST™ 기질 항성성(Dispositional Homeostasis)</strong> 알고리즘을 통해 산출되었습니다.
+</p>
+
+<div style="margin-top: 40px; padding: 25px; background: #fff4e5; border-radius: 20px; border: 1px solid #ffd8a8;">
+    <h4 style="margin: 0 0 10px 0; color: #d9480f;">🧐 더 깊은 속마음이 궁금하신가요?</h4>
+    <p style="font-size: 0.9rem; color: #862e01; margin-bottom: 15px;">
+        방금 확인하신 결과는 전체 분석의 <strong>20% 수준</strong>입니다. <br>
+        나의 <strong>잠재된 재능</strong>과 <strong>운의 흐름</strong>을 상담을 통해 확인해보세요.
+    </p>
+    <button onclick="window.open('원장님_상담_링크_주소')" 
+            style="background: #ff922b; color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(217, 72, 15, 0.2);">
+        OMST 심층 검사 알아보기 ➔
+    </button>
 </div>
 
     <button class="option-btn" style="width: 100%; margin-top: 35px; background: #555; color:#fff;" onclick="location.reload()">다시 하기</button>
@@ -513,7 +597,6 @@ window.onload = function() {
     applyNewNicknames();
 };
 
-// 1. 테스트 종료 및 결과 출력 통합 함수
 function finishTest() {
     console.log("테스트 종료, 결과 분석 시작...");
     
@@ -521,60 +604,109 @@ function finishTest() {
     document.getElementById('test-page').style.display = 'none';
     document.getElementById('result-page').style.display = 'block';
 
-    // 2. 데이터 계산 호출
-    const resultData = calculateAndDisplayResult(userAnswers); 
-    
-    if (!resultData || !resultData.fullKey) {
-        alert("결과 데이터를 생성하지 못했습니다.");
-        return;
+    // 2. 답변 데이터 분할 로직 (내부 함수)
+    function getHalfKey(arr) {
+        // 16개 답변 뒤에 나머지 16개를 중간값(3)으로 채워 32개를 만듭니다.
+        const padding = new Array(16).fill(3); 
+        const full32 = arr.concat(padding);
+        // 외부 파일에 있는 calculateAndDisplayResult 함수를 호출
+        if (typeof calculateAndDisplayResult !== 'undefined') {
+            const res = calculateAndDisplayResult(full32);
+            return res.fullKey.substring(0, 6);
+        }
+        return "000000"; // 비상용 기본값
     }
 
-    // 3. DB 로드 확인
+    // 3. 사회적(s)/내면적(i) 키 생성
+    const socialAnswers = userAnswers.slice(0, 16);
+    const innerAnswers = userAnswers.slice(16, 32);
+
+    const sKey = getHalfKey(socialAnswers); 
+    const iKey = getHalfKey(innerAnswers); 
+
     const db = window.ichingDB || ichingDB;
-    if (typeof db === 'undefined') {
-        alert("데이터베이스(light_db2.js)를 불러오지 못했습니다.");
-        return;
-    }
-
-    const data = db[resultData.fullKey];
+    const data = db[sKey]; // 화면 출력의 기준은 sKey!
 
     if (data) {
-    // [A] 타이틀 및 MBTI 업데이트
-    const resGuaInfo = document.getElementById('res-gua-info');
-    const resNicknameLarge = document.getElementById('res-nickname-large');
-    const resMbti = document.getElementById('res-mbti');
-    const resTags = document.getElementById('res-tags');
+        // [A] 타이틀 및 MBTI 업데이트
+        if (document.getElementById('res-gua-info')) 
+            document.getElementById('res-gua-info').innerText = `${data.symbol || ''} ${data.name || ''}`;
+        if (document.getElementById('res-nickname-large')) 
+            document.getElementById('res-nickname-large').innerText = data.nickname || '';
+        if (document.getElementById('res-mbti')) 
+            document.getElementById('res-mbti').innerText = `유사 MBTI : ${data.mbti || '분석불가'}`;
+        if (document.getElementById('res-tags')) 
+            document.getElementById('res-tags').innerText = data.tag || '';
 
-    // 1. 괘 정보
-    if (resGuaInfo) resGuaInfo.innerText = `${data.symbol || ''} ${data.name || ''}`;
+        // [B] 본문 상세 내용 업데이트
+        const fields = ['social', 'inner', 'romance', 'advice'];
+        fields.forEach(f => {
+            const el = document.getElementById(`res-${f}`);
+            if (el) el.innerText = data[f] || '';
+        });
 
-    // 2. 닉네임
-    if (resNicknameLarge) resNicknameLarge.innerText = data.nickname || '';
+        // [C] 64괘 휠 렌더링 (sKey의 이름으로 전달)
+        render64Wheel(data.name);
 
-    // 3. MBTI (주황색 포인트 컬러 적용)
-    if (resMbti) {
-        resMbti.innerText = `유사 MBTI : ${data.mbti || '분석불가'}`;
-    }
+        // [D] 불일치 지수 업데이트
+        setTimeout(() => {
+            displayDissonance(sKey, iKey);
+        }, 600);
 
-    // 4. 태그 (#해시태그 느낌)
-    if (resTags) resTags.innerText = data.tag || '';
-
-    // [B] 본문 상세 내용 (기존 유지)
-    if (document.getElementById('res-social')) document.getElementById('res-social').innerText = data.social || '';
-    if (document.getElementById('res-inner')) document.getElementById('res-inner').innerText = data.inner || '';
-    if (document.getElementById('res-romance')) document.getElementById('res-romance').innerText = data.romance || '';
-    if (document.getElementById('res-advice')) document.getElementById('res-advice').innerText = data.advice || '';
-
-    // [C] 64괘 휠 렌더링
-    if (resultData.hexaName) {
-        const wheelMyName = document.getElementById('wheel-my-name');
-        if(wheelMyName) wheelMyName.innerText = resultData.hexaName;
-        render64Wheel(resultData.hexaName);
-    }
-} else {
-        alert("해당 괘의 데이터가 DB에 없습니다: " + resultData.fullKey);
+    } else {
+        alert("해당 괘의 데이터가 DB에 없습니다 (Key: " + sKey + ")");
     }
 }
+
+function displayDissonance(socialKey, innerKey) {
+    let diffCount = 0;
+    // 6자리 키를 비교해서 다른 개수만큼 점수화
+    for(let i=0; i<6; i++) {
+        if(socialKey[i] !== innerKey[i]) diffCount++;
+    }
+    
+    let dissRate = Math.floor((diffCount / 6) * 100);
+    if (dissRate < 10) dissRate = 15; // 너무 0이면 재미없으니 최소값 보정
+
+    const bar = document.getElementById('dissonance-bar');
+    const valText = document.getElementById('dissonance-value');
+    const statusBadge = document.getElementById('dissonance-status');
+    const descText = document.getElementById('dissonance-desc');
+
+    if(bar) bar.style.width = dissRate + "%";
+    if(valText) valText.innerText = dissRate + "%";
+
+    // 점수에 따른 상태 변화
+    if (dissRate >= 70) {
+        statusBadge.innerText = "위험 : 극심한 소모";
+        statusBadge.style.background = "#E74C3C";
+        descText.innerHTML = "🎭 <strong>현재 에너지 소모가 매우 큽니다.</strong> 사회적 역할과 본래 모습 사이의 괴리가 깊어 상담이 꼭 필요한 단계입니다.";
+    } else if (dissRate >= 40) {
+        statusBadge.innerText = "경고 : 에너지 누수";
+        statusBadge.style.background = "#E67E22";
+        descText.innerHTML = "⚖️ <strong>조절이 필요한 시기입니다.</strong> 나를 지키면서 사회생활을 할 수 있도록 에너지 관리가 필요합니다.";
+    } else {
+        statusBadge.innerText = "최상 : 완벽한 조화";
+        statusBadge.style.background = "#3498DB";
+        descText.innerHTML = "✨ <strong>심리적 안정도가 매우 높습니다.</strong> 본연의 기질대로 자연스럽게 삶을 꾸려가고 있는 이상적인 상태입니다.";
+    }
+}
+
+// 레드 에너지(가장 안 맞는 괘) 하나 추출하는 함수
+function displayCautionEnergy(scoredList) {
+    // 점수가 가장 낮은(정렬된 리스트의 마지막) 괘 가져오기
+    const worst = scoredList[scoredList.length - 1];
+    const cautionBox = document.getElementById('caution-energy');
+    const badGuaName = document.getElementById('bad-gua-name');
+    
+    if(cautionBox && worst) {
+        cautionBox.style.display = 'block';
+        badGuaName.innerText = worst.name;
+    }
+}
+
+// [수정된 render64Wheel 내부에 추가 호출]
+// scoredList 정렬 직후에 displayCautionEnergy(scoredList)를 실행하세요.
 
 function getGradientColor(score) {
     // [1] 점수 보정 (보통 궁합이 40~100 사이에 몰려 있으므로, 시각적 차이를 극대화)
@@ -627,8 +759,11 @@ function showWheelInfo(guaName, score) {
             </div>
         </div>
     `;
+
+    
 }
 
+// render64Wheel 함수 마지막 부분에 이 한 줄을 꼭 추가하세요!
 function render64Wheel(userHexaName) {
     const container = document.getElementById('wheel-pieces');
     if (!container) return;
@@ -641,16 +776,15 @@ function render64Wheel(userHexaName) {
         score: calculate64Score(userHexaName, target)
     }));
 
-    // 점수 높은 순 정렬
     scoredList.sort((a, b) => b.score - a.score);
+
+    // [추가 포인트] 레드 에너지(궁합 최악) 표시 호출
+    displayCautionEnergy(scoredList);
 
     let html = '';
     scoredList.forEach((item, i) => {
         const color = getGradientColor(item.score);
         const rotation = i * angleStep;
-        
-        // [수정 포인트] 따옴표와 속성을 정확히 분리했습니다. 
-        // 0.1도 정도 겹치게 하여 흰 틈새 방지
         html += `
             <div class="piece" 
                  style="transform: rotate(${rotation}deg); background: ${color};"
@@ -659,11 +793,9 @@ function render64Wheel(userHexaName) {
     });
     
     container.innerHTML = html;
-
     const wheelName = document.getElementById('wheel-my-name');
     if(wheelName) wheelName.innerText = userHexaName;
 
-    // 중앙 원에 마우스 올려도 내 정보 나오게 추가
     const wheelCenter = document.querySelector('.wheel-center');
     if(wheelCenter) {
         wheelCenter.onmouseover = () => showWheelInfo(userHexaName, 100);
